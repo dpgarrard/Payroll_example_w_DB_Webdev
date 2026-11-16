@@ -48,7 +48,7 @@ def department ():
             return template('show_department', data) # send all to template to show it in a table format
         else:
             
-            msg = {'msg':'You screwed up and did something wrong, NOW FIX IT!! LOL'}
+            msg = {'msg':'You screwed up and did something wrong, NOW FIX IT!! LOL'} #generic message as a stopping point
             return template('message', msg) # if something went wrong
     
    
@@ -60,21 +60,23 @@ def edit_hrs():
     else:
         hrs = request.forms.get('hrs')  #data entered in from forms
         eid = request.forms.get('eid')
-
-        con = sqlite3.connect('payroll.db') # connect to database
-        cur = con.cursor()  # allow changes to database
-    # statement to update pay data table and set hours
-        sql =''' UPDATE pay_data
-                SET hrs_worked = ?
-                WHERE emp_id = ?'''
-        cur.execute(sql, (hrs, eid))
-        con.commit() #SAVE CHANGES
-    # statement to select certain info for the did it work page (template)
-        sql_confirm = ''' SELECT emp_id, emp_name, department FROM employees
-                        WHERE emp_id = ?'''
-        cur.execute(sql_confirm, (eid, ))  #forgot to make into a tuple
-        result = cur.fetchone() #grab results of executed statement
-
+        if hrs and eid: #if data in both variables, continue on
+            con = sqlite3.connect('payroll.db') # connect to database
+            cur = con.cursor()  # allow changes to database
+        # statement to update pay data table and set hours
+            sql =''' UPDATE pay_data
+                    SET hrs_worked = ?
+                    WHERE emp_id = ?'''
+            cur.execute(sql, (hrs, eid))
+            con.commit() #SAVE CHANGES
+        # statement to select certain info for the did it work page (template)
+            sql_confirm = ''' SELECT emp_id, emp_name, department FROM employees
+                            WHERE emp_id = ?'''
+            cur.execute(sql_confirm, (eid, ))  #forgot to make into a tuple
+            result = cur.fetchone() #grab results of executed statement
+        else: # if no data in either variable
+            msg = {'msg': 'You screwed up and did something wrong, NOW FIX IT!! LOL'} #generic message as a stopping point
+            return template('message', msg)  # if something went wrong
         if result:
             emp_id, emp_name, dept = result  #unpack tuple result into appropriate variables
             data = {'emp_id': emp_id, 'emp_name': emp_name, 'department': dept} #take and put variables associated with key for template
