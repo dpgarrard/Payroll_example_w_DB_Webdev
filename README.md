@@ -1,5 +1,7 @@
 Employee Payroll Management System-
+
 Project Overview:
+
 This project is a web-based Employee Payroll Management System developed using Python, Bottle, and SQLite. The application allows users to retrieve employee payroll information by department, calculate employee wages based on hours worked, and update employee work hours through a web interface.
 The project demonstrates practical experience with backend web development, relational database management, SQL queries, Python programming logic, and handling user-submitted form data.
 Technologies Used:
